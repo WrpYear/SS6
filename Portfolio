@@ -1,0 +1,2248 @@
+<?php
+
+    // echo '<pre>';
+    // print_r($_POST);
+    write_log("METHOD : ".$_SERVER['REQUEST_METHOD']."\nINPUT : ".json_encode($_POST));
+    function write_log($log){
+        //Something to write to txt log
+
+        $date_log = date("Y-m-d H:i:s").PHP_EOL.
+        "IP : ".get_client_ip().PHP_EOL.
+        "DATA : ".$log.PHP_EOL."-------------------------".PHP_EOL;
+        //Save string to log, use FILE_APPEND to append.
+        file_put_contents('logs/log_'.date("Ymd").'.txt', $date_log, FILE_APPEND);
+    }
+
+    function get_client_ip() {
+        $ipaddress = '';
+        if (getenv('HTTP_CLIENT_IP'))
+            $ipaddress = getenv('HTTP_CLIENT_IP');
+        else if(getenv('HTTP_X_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        else if(getenv('HTTP_X_FORWARDED'))
+            $ipaddress = getenv('HTTP_X_FORWARDED');
+        else if(getenv('HTTP_FORWARDED_FOR'))
+            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        else if(getenv('HTTP_FORWARDED'))<?php
+
+/* ----- full_ss6 ----- */
+define('WebIP', 'localhost');
+define('WebDB', 'full_ss6');
+define('WebUser', 'year');//root
+define('WebPass', 'wora1234');
+
+?>
+<?php
+    include_once('Variable.DB.php');
+    include_once('MySQLClass.php');
+
+?>
+<?PHP
+
+/*
+ *
+ * Function MYSQL
+ * 2008-11-13
+ * 
+ *
+ */
+
+require_once("Variable.DB.php");
+
+class MySQLClass {
+
+    var $Connect;
+
+    function Connect2Web(){
+        $this->Connect = mysqli_connect( WebIP, WebUser, WebPass );
+        @mysqli_query($this->Connect,"set character_set_results=utf8mb4");
+        @mysqli_query($this->Connect,"set character_set_client=utf8mb4");
+        @mysqli_query($this->Connect,"set character_set_connection=utf8mb4");
+    }
+
+    function dbname($dbname){
+        @mysqli_select_db($this->Connect,$dbname);
+        if(mysqli_error($this->Connect)!=""){
+            echo mysqli_error($this->Connect);
+        }
+    }
+
+    function closedb(){
+        @mysqli_close( $this->Connect );
+    }
+
+    function select($sql){
+        $array_result = array();
+        $result = mysqli_query($this->Connect, $sql);
+        if($result){
+            while ($row = mysqli_fetch_object($result)) {
+                array_push($array_result, $row);
+            }
+            mysqli_free_result($result);
+        }else{
+            if(mysqli_error($this->Connect)!=""){
+                echo mysqli_error($this->Connect);
+            }
+            return false;
+        }
+        return $array_result;
+    }
+
+    // function execute($sql){
+    //     $result = @mysqli_query($this->Connect, $sql);
+    //     if($result){
+    //         return true;
+    //     }else{
+    //         // if(mysqli_error($this->Connect)!=""){
+    //         //     echo mysqli_error($this->Connect);
+    //         // }
+    //         return false;
+    //     }
+    // }
+    function execute($sql){
+        try {
+             $result = mysqli_query($this->Connect, $sql);
+             if($result){
+                return true;
+            }else{
+                // if(mysqli_error($this->Connect)!=""){
+                //     echo mysqli_error($this->Connect);
+                // }
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    function escape_string($str){
+       return mysqli_real_escape_string($this->Connect,$str);
+    }
+
+   
+
+}
+
+?>
+           $ipaddress = getenv('HTTP_FORWARDED');
+        else if(getenv('REMOTE_ADDR'))
+            $ipaddress = getenv('REMOTE_ADDR');
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
+    }
+
+    $fname = '';
+    $lname = '';
+    $username = '';
+    $password = '';
+    $confirm_password = '';
+    $email = '';
+    $phone = '';
+    $address = '';
+    $ref_code = '';
+
+    if (!isset($_POST['fname']) || $_POST['fname'] == '') {
+        $response = array('ret' => '102', 'message' => 'invalid value fname');
+        echo json_encode($response);
+        exit;
+    } else {
+        $fname = trim($_POST['fname']);
+        if (!preg_match("/^[ก-๙a-zA-Z\s'-]+$/u",$fname)) {
+        $response = array('ret' => '102', 'message' => "Only letters and white space allowed");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['lname']) || $_POST['lname'] == '') {
+        $response = array('ret' => '103', 'message' => 'invalid value lname');
+        echo json_encode($response);
+        exit;
+    } else {
+        $lname = trim($_POST['lname']);
+        if (!preg_match("/^[ก-๙a-zA-Z\s'-]+$/u",$lname)) {
+        $response = array('ret' => '103', 'message' => "Only letters and white space allowed");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['username']) || $_POST['username'] == '') {
+        $response = array('ret' => '104', 'message' => 'invalid value username');
+        echo json_encode($response);
+        exit;
+    } else {
+        $username = trim($_POST['username']);
+        if (!preg_match("/^[a-zA-Z\d]{8,20}$/",$username)) {
+        $response = array('ret' => '104', 'message' => "Username not in right format.");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['password']) || $_POST['password'] == '') {
+        $response = array('ret' => '105', 'message' => 'invalid value password');
+        echo json_encode($response);
+        exit;
+    } else {
+        $password = trim($_POST['password']);
+        if (!preg_match("/[A-Za-z0-9#?!@$%^&*-]{8,}$/",$password)) {
+        $response = array('ret' => '105', 'message' => "Password not in right format.");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['confirm-password']) || $_POST['confirm-password'] == '') {
+        $response = array('ret' => '106', 'message' => 'invalid value confirm-password');
+        echo json_encode($response);
+        exit;
+    } else {
+        $confirm_password = trim($_POST['confirm-password']);
+        if ($confirm_password != $password) {
+        $response = array('ret' => '106', 'message' => "Confirm-password not match with the password.");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['email']) || $_POST['email'] == '') {
+        $response = array('ret' => '107', 'message' => 'invalid value email');
+        echo json_encode($response);
+        exit;
+    } else {
+        $email = trim($_POST['email']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $response = array('ret' => '107', 'message' => "invalid email format.");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['phone']) || $_POST['phone'] == '') {
+        $response = array('ret' => '108', 'message' => 'invalid value phone');
+        echo json_encode($response);
+        exit;
+    } else {
+        $phone = trim($_POST['phone']);
+        if (!preg_match('/[0-9]{10,}/', $phone)) {
+        $response = array('ret' => '108', 'message' => "invalid phone format");
+        echo json_encode($response);
+        exit;
+        }
+    }
+    if (!isset($_POST['address']) || $_POST['address'] == '') {
+        $response = array('ret' => '109', 'message' => 'invalid value address');
+        echo json_encode($response);
+        exit;
+    } else {
+        $address = trim($_POST['address']);
+    }
+    if (!isset($_POST['ref_code']) || $_POST['ref_code'] == '') {
+
+    } else {
+        $ref_code = trim($_POST['ref_code']);
+    }
+    
+
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if(empty($web->Connect)){
+        echo "Cannot cennect database";
+        exit;
+    }
+    $web->dbname(WebDB);
+
+    $password = md5($password);
+    $sqlChk = "SELECT username, email, phone FROM user_account WHERE username='{$username}' OR email='{$email}' OR phone='{$phone}';";
+    $rsChk = $web->select($sqlChk);
+    // echo '<pre>';
+    // print_r($rsChk) ;
+    if(count($rsChk)>0){
+
+        for ($i=0;$i<count($rsChk);$i++){
+            if($username == $rsChk[$i]->username){
+                $response = json_encode(array("ret"=>"102", "message"=>"username is duplicated."));
+                echo $response;
+                exit;
+            }
+            if($email == $rsChk[$i]->email){
+                $response = json_encode(array("ret"=>"103", "message"=>"email is duplicated."));
+                echo $response;
+                exit;
+            }
+            if($phone == $rsChk[$i]->phone){
+                $response = json_encode(array("ret"=>"104", "message"=>"phone is duplicated."));
+                echo $response;
+                exit;
+            }
+        }
+    }
+
+    $insert = "INSERT INTO `user_account` (`name`, `lastname`, `username`, `password`, `email`, `phone`, `address`, `ref_code`) VALUES ('{$fname}', '{$lname}', '{$username}', '{$password}', '{$email}', '{$phone}', '{$address}', '{$ref_code}');";
+    $rs = $web->execute($insert);
+    if (!$rs) {
+    $response = json_encode(array("ret"=>"102", "message"=>"unsuccess"));
+    echo $response;
+    exit;
+    } else {
+    $response = json_encode(array("ret"=>"200", "message"=>"success"));
+    echo $response;
+    exit;
+}
+$web->closedb();
+
+    // echo 'fname: '.$fname.'<hr/>';
+    // echo 'lname: '.$lname.'<hr/>';
+    // echo 'username: '.$username.'<hr/>';
+    // echo 'password: '.$password.'<hr/>';
+    // echo 'confirm-password: '.$confirm_password.'<hr/>';
+    // echo 'email: '.$email.'<hr/>';
+    // echo 'phone: '.$phone.'<hr/>';
+    // echo 'address: '.$address.'<hr/>';
+
+    // if ($_POST['fname'] !== '' && $_POST['lname'] !== '' && $_POST['username'] !== '' && $_POST['password'] !== '' && $_POST['confirm-password'] !== '' && $_POST['email'] !== '' && $_POST['phone'] !== '' && $_POST['address'] !== '') {
+    //     $response = array('ret' => '200', 'message' => 'success');
+    //     echo json_encode($response);
+    //     exit;
+    // }
+?>
+<?php
+session_start();
+
+if (!isset($_SESSION['uid'])) {
+    echo json_encode([
+        'ret' => '401',
+        'message' => 'User not logged in'
+    ]);
+    exit;
+}
+
+include_once('manage_point.php');
+
+$spin_type = isset($_POST['spin_type']) ? $_POST['spin_type'] : "";
+if ($spin_type == '1') {
+  
+  $uid = $_SESSION['uid'];
+    $order_id = "spin_" . uniqid(); // ป้องกันซ้ำ
+    $cost_per_spin = 500;
+    $point_type = '1'; 
+    $comment = 'Spin cost';
+    $action_by = 'Spin System';
+
+    // หัก point ก่อน spin โดยเรียก deductPoint()
+    ob_start(); // ซ่อน echo ใน deductPoint
+    deductPoint($uid, $order_id, $cost_per_spin, $point_type, $comment, $action_by);
+    $responseJson = ob_get_clean();
+    
+    $response = json_decode($responseJson, true);
+
+    // if (!isset($response['ret']) || $response['ret'] !== '200') {
+    //     echo json_encode([
+    //         'ret' => '120',
+    //         'message' => 'Not enough point or deduction failed',
+    //         'error_data' => $response
+    //     ]);
+    //     exit;
+    // }
+    
+    $reward_data = array(
+        50 => 700,
+        100 => 1700,
+        200 => 2700,
+        300 => 3700,
+        400 => 5200,
+        500 => 7392,
+        600 => 8892,
+        1000 => 9892,
+        1500 => 9992,
+        2000 => 9997,
+        3000 => 9999,
+        5000 => 10000
+    );
+
+  $range = rand(0, 10000);
+  $sum = 0;
+  $selected_point = 0;
+  $index = 0;
+
+  foreach ($reward_data as $point => $probability) {
+    $sum = $probability;
+    if ($range <= $sum) {
+        $selected_point = $point;
+        break;
+    }
+    $index++; // เพิ่ม index ไว้ใช้งานใน more_data 
+    }
+
+    $comment_add = 'Spin reward';
+    $order_id_add = "spin_reward_" . uniqid(); //order_id กันซ้ำ
+    $point_type_add = '1';
+
+    ob_start(); // ซ่อน echo ของ addPoint
+    addPoint($uid, $order_id_add, $selected_point, $point_type_add, $comment_add, $action_by);
+    ob_end_clean();
+
+    $current_points = checkPoint($uid);
+
+
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if (empty($web->Connect)) {
+        echo json_encode(['ret' => '999', 'message' => 'Cannot connect database']);
+        exit;
+    }
+
+    $web->dbname(WebDB);
+
+    $rs = $web->select("SELECT id FROM user_balancelog WHERE user_id='{$uid}' ORDER BY id DESC LIMIT 1;");
+    if (count($rs) != 1) {
+        echo json_encode(['ret' => '101', 'message' => 'User not found!']);
+        $web->closedb();
+        exit;
+    }
+    $log_id = $rs[0]->id;
+    $insertPlayLogSQL ="INSERT INTO `play_log` (`user_id`, `log_id`, `spin_reward`) VALUES ('{$uid}', '{$log_id}', '{$selected_point}');";
+    $insertPlayLog = $web->execute($insertPlayLogSQL);
+    if (!$insertPlayLog) {
+        echo json_encode(['ret' => '102', 'message' => 'Insert insert playlog fail!']);
+        $web->closedb();
+        exit;
+    }
+    
+    
+
+  $more_data = array(
+        'index' => $index,
+        'point' => $reward_data[$point],
+        'point_display' => $selected_point,
+        'range' => $range
+    );
+
+    $res = array(
+        'ret' => '200',
+        'message' => 'success',
+        'more_data' => $more_data,
+        'current_point' => $current_points
+    );
+    echo json_encode($res);
+
+
+} else if ($spin_type=='test') {
+
+$sumPointReword = 0;
+$arrPropJackpot = array();
+  for($x=0;$x<10000;$x++){
+    $callTest = testProp();
+      $sumPointReword = $sumPointReword + $callTest['reward_point'];
+      if(!isset($arrPropJackpot[$callTest['propJackpot']])){
+        $arrPropJackpot[$callTest['propJackpot']] = 0;
+      }
+      $arrPropJackpot[$callTest['propJackpot']] = $arrPropJackpot[$callTest['propJackpot']] + 1;
+     }
+     $userCost = (500*10000);
+     echo "User cost : ".number_format($userCost);
+     echo "<hr>";
+     echo "System Reward : ".number_format($sumPointReword);
+     echo "<hr>";
+    
+      echo "System Win/Loss : ".number_format($userCost - $sumPointReword);
+       echo "<pre>";
+
+     print_r($arrPropJackpot);
+
+    
+      
+     
+} else {
+  $res = array(
+    'ret' => '102', 
+    'message'=>'invalid spin_type',
+  );
+  echo json_encode($res);
+}
+
+
+ function testProp(){
+      $reward_data = array(
+        50 => 700,
+        100 => 1700,
+        200 => 2700,
+        300 => 3700,
+        400 => 5200,
+        500 => 7392,
+        600 => 8892,
+        1000 => 9892,
+        1500 => 9992,
+        2000 => 9997,
+        3000 => 9999,
+        5000 => 10000
+    );
+    
+
+      $selected_point = 0;
+      $range = rand(0, 10000);
+      $sum = 0;
+
+          foreach ($reward_data as $point => $probability) {
+              $sum = $probability;
+              if ($range <= $sum) {
+                  $selected_point = $point;
+                  $arrRes = array('reward_point'=>$selected_point,'propJackpot'=>$selected_point);
+                  return $arrRes;
+              }
+          }
+      
+
+     }
+?>
+
+<?php
+    session_start();
+
+    if (!isset($_SESSION['username'])) {
+        header("Location: logout.php");
+        exit;
+    }
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roulette</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <style>
+    body {
+      background: #2f8f9d;
+    }
+    .compsoul-history-table {
+      width: 90%;
+      max-width: 800px;
+      margin: 3rem auto;
+      background-color: #181818;
+      color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      font-size: 1rem;
+    }
+
+    .compsoul-history-table thead tr {
+      background-color: #143f6b;
+      color: #fff;
+      text-align: center;
+    }
+
+    .compsoul-history-table thead th {
+      padding: 0.75rem;
+      border-bottom: 1px solid #2f8f9d;
+    }
+
+    .compsoul-history-table tbody td {
+      padding: 0.75rem;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    .compsoul-history-table tbody tr:nth-child(even) {
+      background-color: #222;
+    }
+
+    .compsoul-history-table tfoot td {
+      font-weight: bold;
+      background-color: #2f8f9d;
+      color: #fff;
+    }
+
+    .compsoul-history-table .total-row {
+      background-color: #feb139;
+      color: #000;
+      font-weight: bold;
+    }
+    .hidden {
+      border: 0 !important;
+      height: 1px !important;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0 !important;
+      pointer-events: none;
+      position: absolute !important;
+      width: 1px !important;
+    }
+
+    .compsoul-body {
+      align-items: center;
+      display: flex;
+      flex-flow: column wrap;
+      font-size: 1.125vw;
+      padding: 6vw;
+    }
+
+    .compsoul-roulette-label {
+      background: #181818;
+      color: #ffffff;
+      cursor: pointer;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 200;
+      padding: 0.8vw 1.2vw;
+      margin: 0 0 3.2vw;
+      text-transform: uppercase;
+    }
+
+    .compsoul-roulette-label:before {
+      content: "Try your luck";
+    }
+
+    .compsoul-roulette-checkbox:checked+.compsoul-roulette-label:before {
+      content: "Stop!";
+    }
+
+    .compsoul-roulette {
+      transition: transform 4s ease-out;
+    }
+
+    .compsoul-roulette {
+      --size: 34em;
+      --number-of-items: 12;
+      --angle: calc(3.1416 / var(--number-of-items));
+      --tangent-first: var(--angle);
+      --tangent-second: calc((1/3) * var(--angle) * var(--angle) * var(--angle));
+      --tangent-third: calc((2 / 15) * var(--angle) * var(--angle) * var(--angle) * var(--angle) * var(--angle));
+      --tangent-fourth: calc((17/315) * var(--angle) * var(--angle) * var(--angle) * var(--angle) * var(--angle) * var(--angle) * var(--angle));
+      --tangent: calc(var(--tangent-first) + var(--tangent-second) + var(--tangent-third) + var(--tangent-fourth));
+      outline: 1.2em solid #fff;
+      outline-offset: -1em;
+      border-radius: 100%;
+      box-shadow: 1.2em 1.2em 0 -0.8em #00000022;
+      height: var(--size);
+      position: relative;
+      width: var(--size);
+      z-index: 1;
+    }
+
+    .compsoul-roulette:before,
+    .compsoul-roulette:after {
+      background: #00000022;
+      border-radius: 100%;
+      content: "";
+      height: 8em;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-45%, -45%);
+      width: 8em;
+      z-index: 2;
+    }
+
+    .compsoul-roulette:after {
+      background: #ffffff no-repeat center;
+      background-size: 80%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .compsoul-roulette .roulette-marker {
+      border-radius: 0.4em 0 0 0.4em;
+      left: -2em;
+      overflow: hidden;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      z-index: 0;
+    }
+
+    .compsoul-roulette .roulette-marker:before,
+    .compsoul-roulette .roulette-marker:after {
+      border-bottom: 2em solid transparent;
+      border-left: 4em solid #ffa3c7;
+      border-top: 2em solid transparent;
+      content: "";
+      display: block;
+      height: 0;
+      width: 0;
+    }
+
+    .compsoul-roulette .roulette-marker:after {
+      border-left: 4em solid #00000022;
+      position: absolute;
+      top: 0.4em;
+      z-index: -1;
+    }
+
+    .compsoul-roulette .roulette-list {
+      transition: transform 2s ease-out;
+      transform: rotate(0deg);
+      /* animation: roulette 0.8s linear infinite paused; */
+      border-radius: 100%;
+      font-family: Helvetica, Arial, sans-serif;
+      height: 100%;
+      list-style-type: none;
+      margin: 0;
+      overflow: hidden;
+      padding: 0;
+      position: relative;
+      width: 100%;
+      z-index: -1;
+    }
+
+    .compsoul-roulette-checkbox:checked+.compsoul-roulette-label+.compsoul-roulette .roulette-list {
+      animation-play-state: running;
+    }
+
+    @keyframes roulette {
+      0% {
+        transform: rotate(0);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .compsoul-roulette .roulette-item {
+      align-items: center;
+      bottom: calc(var(--size) / 2);
+      color: #ffffff;
+      display: flex;
+      font-size: 1em;
+      font-weight: 600;
+      height: calc(var(--size) / 2);
+      left: calc(var(--size) / 4);
+      position: absolute;
+      text-indent: 2em;
+      text-transform: uppercase;
+      transform-origin: bottom center;
+      width: calc(var(--size) / 2);
+      writing-mode: vertical-rl;
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(1) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 0));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(2) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 1));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(3) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 2));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(4) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 3));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(5) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 4));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(6) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 5));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(7) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 6));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(8) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 7));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(9) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 8));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(10) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 9));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(11) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 10));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(12) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 11));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(13) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 12));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(14) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 13));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(15) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 14));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(16) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 15));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(17) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 16));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(18) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 17));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(19) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 18));
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(20) {
+      transform: rotate(calc(360deg / var(--number-of-items) * 19));
+    }
+
+    .compsoul-roulette .roulette-item:after {
+      bottom: 0;
+      border-right: calc(var(--size) / 2 * var(--tangent) + 1px) solid transparent;
+      border-top: calc(var(--size) / 2) solid transparent;
+      border-left: calc(var(--size) / 2 * var(--tangent) + 1px) solid transparent;
+      content: "";
+      display: block;
+      height: 0;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, 0);
+      width: 0;
+      z-index: -1;
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(4n+1):after {
+      border-top-color: #143f6b;
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(4n+2):after {
+      border-top-color: #F1E0AC;
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(4n+3):after {
+      border-top-color: #F55353;
+    }
+
+    .compsoul-roulette .roulette-item:nth-child(4n+4):after {
+      border-top-color: #feb139;
+    }
+    .spin-btn-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+
+      width: 15%;
+      height: 15%;
+      border-radius: 50%;
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+.spin-btn-center:hover {
+  background-color: #d9363e;
+}
+#current_point {
+  background-color: #181818;
+  color: #fff;
+  padding: 1rem 2rem;
+  margin: 2rem auto;
+  border-radius: 12px;
+  font-weight: bold;
+  width: fit-content;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  font-size: 1.25rem;
+}
+
+#current_point span {
+  color: #feb139;
+  margin: 0 0.5rem;
+}
+
+#current_point .label {
+  color: #7fe7dc;
+}
+.compsoul-roulette .roulette-list {
+  transition: transform 2s ease-out;
+  transform: rotate(0deg);
+}
+
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg bg-secondary-subtle">
+      <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                  <li class="nav-item me-2" id="add-point-btn">
+                      <button class="btn btn-primary">
+                          <a style="text-decoration: none; color: white" href="./add_point.php">Add Point</a>
+                      </button>
+                  </li>
+                  <li class="nav-item" id="logout-btn">
+                      <button class="btn btn-secondary">
+                          <a style="text-decoration: none; color: white" href="./logout.php">Logout</a>
+                      </button>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+  <div class="compsoul-body">
+    <div>
+      </div>
+      <div class="compsoul-roulette">
+        <ul class="roulette-list">
+          <li class="roulette-item">50 Points</li>
+          <li class="roulette-item">100 Points</li>
+          <li class="roulette-item">200 Points</li>
+          <li class="roulette-item">300 Points</li>
+          <li class="roulette-item">400 Points</li>
+          <li class="roulette-item">500 Points</li>
+          <li class="roulette-item">600 Points</li>
+          <li class="roulette-item">1,000 Points</li>
+          <li class="roulette-item">1,500 Points</li>
+          <li class="roulette-item">2,000 Points</li>
+          <li class="roulette-item">3,000 Points</li>
+          <li class="roulette-item">5,000 Points</li>
+        </ul>
+        <div class="roulette-marker"></div>
+        <button class="spin-btn-center spin-btn-center:hover" id="spin-btn">SPIN</button>
+    </div>
+  </div>
+  <div class="text-center fs-5" id="current_point">
+            <?php
+            include_once('manage_point.php');
+            $current_points = checkPoint($_SESSION['uid']);
+            echo '
+                <div class="label">Your point: <span>'.number_format($current_points['point']).'</span> Points</div>
+                <div class="label">Free point: <span>'.number_format($current_points['point_free']).'</span> Points</div>';
+          
+            ?>
+  </div>
+  <div id="spin-history"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  <script>
+  $(document).ready(function () {
+    const spinBtn = document.getElementById("spin-btn");
+    const rouletteList = document.querySelector(".roulette-list");
+    let currentRotation = 0;
+
+    function loadSpinHistory() {
+        $.ajax({
+            url: 'spin_history_table.php',
+            method: 'GET',
+            success: function(response) {
+                $('#spin-history').html(response);
+            }
+        });
+    }
+    loadSpinHistory();
+    $('#spin-btn').on('click', function(){
+      $.ajax({
+        type: "POST", //METHOD "GET","POST"
+        url: "roulette_api.php", //File ที่ส่งค่าไปหา
+        data: {
+          spin_type: 1
+        },
+        //cache: false,
+        success: function(data) {
+          console.log(data);
+          let obj = JSON.parse(data);
+          if (obj.ret === '200') {
+            loadSpinHistory();
+            $('#current_point').html(
+                '<div class="label">Your point: <span>' + parseInt(obj.current_point.point).toLocaleString() + '</span> Points</div>' +
+                '<div class="label">Free point: <span>' + parseInt(obj.current_point.point_free).toLocaleString() + '</span> Points</div>'
+            );
+
+            const extraSpins = 5;
+            const degreesPerSlot = 360 / 12;
+            const targetSlotIndex = obj.more_data.index; 
+            const targetRotation = targetSlotIndex * degreesPerSlot;
+            const overshoot = 15; // องศาที่หมุนเกินไปก่อนจะดีดกลับ
+            const totalRotation = extraSpins * 360 - targetRotation;
+
+            // ปรับให้ค่าหมุนเริ่มต้นเป็นรอบเต็มๆ
+            currentRotation = Math.round(currentRotation / 360) * 360;
+
+            // หมุนเกินเป้าหมายเล็กน้อย
+            const overshootRotation = currentRotation + totalRotation + 265 + overshoot;
+            rouletteList.style.transition = 'transform 2s ease-out';
+            rouletteList.style.transform = `rotate(${overshootRotation}deg)`;
+
+            // หลังจากหมุนเสร็จ ให้ดีดกลับเล็กน้อย
+            setTimeout(() => {
+              const finalRotation = overshootRotation - overshoot;
+              rouletteList.style.transition = 'transform 0.5s ease-in-out';
+              rouletteList.style.transform = `rotate(${finalRotation}deg)`;
+              currentRotation = finalRotation; // เก็บค่าหมุนล่าสุด
+            }, 2000); // ตรงกับเวลา transition: 2s
+
+          } else {
+            alert(obj.message);
+          }
+        }
+      });
+      
+    })
+});
+
+
+  </script>
+</body>
+
+</html>
+<?php
+session_start();
+
+if (!isset($_SESSION['uid'])) {
+    echo json_encode([
+        'ret' => '401',
+        'message' => 'User not logged in'
+    ]);
+    exit;
+}
+
+include_once('manage_point.php');
+
+    $user_id = '';
+    $username = '';
+    $add_point = '';
+    $point_type = '';
+    
+
+    if (!isset($_POST['user_id']) || $_POST['user_id'] == '') {
+        if (!isset($_POST['username']) || $_POST['username'] == '') {
+        $response = array('ret' => '101', 'message' => 'invalid value username and user_id');
+        echo json_encode($response);
+        exit;
+    } else {
+        $username = $_POST['username'];
+        if (!preg_match("/^[a-zA-Z\d]{8,20}$/", $username)) {
+            echo json_encode(['ret' => '104', 'message' => "Only number is allowed!"]);
+            exit;
+        }
+
+    }
+    } else {
+        $user_id = $_POST['user_id'];
+        if (!preg_match('/^[0-9]+$/', $user_id)) {
+            echo json_encode(['ret' => '105', 'message' => "Only number is allowed!"]);
+            exit;
+        }
+    }
+    
+    if (!isset($_POST['add_point']) || $_POST['add_point'] == '') {
+        $response = array('ret' => '102', 'message' => 'invalid value add_point');
+        echo json_encode($response);
+        exit;
+    } else {
+        $add_point = $_POST['add_point'];
+        if (!preg_match('/^[0-9]+$/', $add_point) && $add_point < 500) {
+            echo json_encode(['ret' => '106', 'message' => "Point added < 500 is not allowed!"]);
+            exit;
+        }
+    }
+
+    if (!isset($_POST['point_type']) || $_POST['point_type'] == '') {
+        $response = array('ret' => '103', 'message' => 'invalid value add_point');
+        echo json_encode($response);
+        exit;
+    } else {
+        $point_type = $_POST['point_type'];
+        if (!in_array($point_type, ['1', '2'])) {
+            echo json_encode(['ret' => '107', 'message' => "Point type allowed only 1(point) or 2(free point)."]);
+            exit;
+        }
+    }
+    
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if(empty($web->Connect)){
+        echo "Cannot cennect database";
+        exit;
+    }
+    $web->dbname(WebDB);
+    $strSQL = "SELECT * FROM user_account WHERE id='{$user_id}' OR username='{$username}';";
+    $rs = $web->select($strSQL);
+    if (count($rs)!=1) {
+        $response = array("ret"=>'103','message'=>'User ID and Username not found!');
+        echo json_encode($response);
+        $web->closedb();
+        exit;
+    }
+    $uid = $rs[0]->id;
+    $order_id = "manual_added_" . uniqid();
+    $point = $add_point;
+    $comment = '';
+    $action_by = 'Manually added';
+    addPoint($uid, $order_id, $point, $point_type, $comment, $action_by);
+?>
+<?php
+    session_start();
+
+    if (!isset($_SESSION['username'])) {
+        header("Location: logout.php");
+        exit;
+    }
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Point</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <style>
+        .container {
+            width: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="add_point_api.php" method="POST" id="add_point_form">
+        <div>
+            <div class="container bg-light p-4 rounded shadow-lg border border-primary mt-5">
+                <h1>Add Point</h1>
+                <div class="p-2 ps-0 form-group">
+                    <label for="user_id">User ID</label>
+                    <input name="user_id" type="number" class="form-control" id="user_id" placeholder="User ID" required>
+                </div>
+                <div class="p-2 ps-0 form-group">
+                    <label for="username">Username</label>
+                    <input name="username" type="text" class="form-control" id="username" placeholder="Username" required>
+                </div>
+                <div class="p-2 ps-0 form-group">
+                    <label for="add_point">Number of Points</label>
+                    <input name="add_point" type="number" class="form-control" id="add_point" placeholder="Number of Points" required>
+                </div>
+                <label for="point_type">Choose point type:</label>
+                <select name="point_type" id="point_type">
+                <option value="1">Point</option>
+                <option value="2">Point Free</option>
+                </select><br>
+                <button type="button" class="mt-2 btn btn-primary" id="add-btn">Add</button>
+                <a href="roulette_wheel.php">
+                    <button type="button" class="mt-2 btn btn-secondary" id="add-btn">Back to Spin</button>
+                </a>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#add-btn').click(() => {
+
+                $('#user_id').removeClass('is-invalid');
+                $('#username').removeClass('is-invalid');
+                $('#add_point').removeClass('is-invalid');
+                let user_id = $('#user_id').val();
+                let username = $('#username').val();
+                let add_point = $('#add_point').val();
+                let point_type = $('#point_type').val();
+                if (user_id !== '' || username !== '') {
+                    $('#user_id').addClass('is-valid');
+                    $('#username').addClass('is-valid');
+                } else {
+                    $('#user_id').focus();
+                    $('#user_id').addClass('is-invalid');
+                    $('#username').addClass('is-invalid');
+                    return false;
+                }
+                if (add_point !== '') {
+                    $('#add_point').addClass('is-valid');
+                } else {
+                    $('#add_point').addClass('is-invalid');
+                    $('#add_point').focus();
+                    return false;
+                }
+                $.ajax({
+                    type: "POST", //METHOD "GET","POST"
+                    url: "add_point_api.php", //File ที่ส่งค่าไปหา
+                    data: {
+                        user_id: user_id,
+                        username: username,
+                        add_point: add_point,
+                        point_type: point_type,
+                    },
+                    //cache: false,
+                    success: function(data) {
+                        let obj = JSON.parse(data);
+                        if (obj.ret == '200') {
+                            alert(obj.message);
+                        } else {
+                            alert(obj.message);
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+    
+
+</body>
+
+</html>
+<?php
+if(!isset($_SESSION)){
+    session_start();
+}
+    
+    $username = '';
+    $password = '';
+
+    if (!isset($_POST['username']) || $_POST['username'] == '') {
+        $response = array('ret' => '101', 'message' => 'invalid value username');
+        echo json_encode($response);
+        exit;
+    } else {
+        $username = $_POST['username'];
+    }
+    if (!isset($_POST['password']) || $_POST['password'] == '') {
+        $response = array('ret' => '102', 'message' => 'invalid value password');
+        echo json_encode($response);
+        exit;
+    } else {
+        $password = $_POST['password'];
+    }
+    
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if(empty($web->Connect)){
+        echo "Cannot cennect database";
+        exit;
+    }
+    $web->dbname(WebDB);
+    $password = md5($password);
+    $strSQL = "SELECT * FROM user_account WHERE username='{$username}' AND password='{$password}';";
+        $rs = $web->select($strSQL);
+        if(count($rs) == 1){
+            if($rs[0]->status=='1'){
+                $_SESSION['username'] = $rs[0]->username;
+                $_SESSION['uid'] = $rs[0]->id;
+                $response = array("ret"=>'200','message'=>'success');
+                echo json_encode($response);
+            }else{
+                $response = array("ret"=>'201','message'=>'User not active');
+            echo json_encode($response);
+            }
+            
+        }else{
+            $response = array("ret"=>'102','message'=>'This user not exist.');
+            echo json_encode($response); 
+        }
+
+
+            
+
+
+    // if ($result) {
+    //     echo json_encode(['ret' => '200', 'message' => 'Update success']);
+    // } else {
+    //     echo json_encode(['ret' => '100', 'message' => 'Update unsuccess']);
+    // }
+
+    $web->closedb();
+
+?>
+<?php
+// เริ่มต้น session ก่อน
+session_start();
+
+// ทำลาย session ทั้งหมด
+session_destroy();
+
+// กลับไปหน้า login หรือหน้าแรก
+header("Location: login.php");
+exit;
+?>
+
+<?php
+
+//function addPoint()
+
+// $uid = 68;
+// $order_id = "de_001s0012";
+// $point = 10500;
+// $point_type = 1;
+// $comment = "TEST API x1";
+// $action_by = "API TEST File";
+
+// echo "<pre>";
+// // addPoint($uid, $order_id, $point, $point_type, $comment, $action_by) ;
+// deductPoint($uid, $order_id, $point, $point_type, $comment, $action_by);
+// echo "<hr>";
+// checkPoint($uid);
+
+function addPoint($uid, $order_id, $point, $point_type, $comment, $action_by) {
+    // if (!isset($_POST['id']) || $_POST['id'] == '') {
+    //     echo json_encode(['ret' => '106', 'message' => 'invalid value id']);
+    //     exit;
+    // } else {
+    //     $uid = $_POST['id'];
+    //     if (!preg_match('/^[0-9]+$/', $uid)) {
+    //         echo json_encode(['ret' => '110', 'message' => "Only number is allowed!"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['order_id']) || $_POST['order_id'] == '') {
+    //     echo json_encode(['ret' => '107', 'message' => 'invalid value order_id']);
+    //     exit;
+    // } else {
+    //     $order_id = $_POST['order_id'];
+    //     if (!preg_match("/^[a-zA-Z\d]{6,20}$/", $order_id)) {
+    //         echo json_encode(['ret' => '111', 'message' => "invalid order_id format"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['point']) || $_POST['point'] == '') {
+    //     echo json_encode(['ret' => '108', 'message' => 'invalid value point']);
+    //     exit;
+    // } else {
+    //     $point = intval($_POST['point']);
+    //     if ($point <= 0) {
+    //         echo json_encode(['ret' => '112', 'message' => "invalid point format"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['point_type']) || $_POST['point_type'] == '') {
+    //     echo json_encode(['ret' => '109', 'message' => 'invalid value point_type']);
+    //     exit;
+    // } else {
+    //     $point_type = $_POST['point_type'];
+    //     if (!in_array($point_type, ['1', '2'])) {
+    //         echo json_encode(['ret' => '113', 'message' => "Point type allowed only 1(point) or 2(point_free)."]);
+    //         exit;
+    //     }
+    // }
+
+    // $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
+    // $action_by = isset($_POST['action_by']) ? $_POST['action_by'] : '';
+
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if (empty($web->Connect)) {
+        echo json_encode(['ret' => '999', 'message' => 'Cannot connect database']);
+        exit;
+    }
+
+    $web->dbname(WebDB);
+    $rs = $web->select("SELECT username, id FROM user_account WHERE id='{$uid}';");
+
+    if (count($rs) != 1) {
+        echo json_encode(['ret' => '101', 'message' => 'User not found!']);
+        $web->closedb();
+        exit;
+    }
+
+    $pointColumn = $point_type == '1' ? 'point' : 'point_free';
+    
+    $rswallet = $web->select("SELECT point, point_free FROM user_wallet WHERE user_id = '{$uid}';");
+    $old_point = 0;
+    $old_point_free = 0;
+    
+    if (count($rswallet) != 1) {
+        // Create wallet
+        $web->execute("INSERT INTO `user_wallet` (`user_id`) VALUES ('{$uid}');");
+    } else {
+        $old_point = $rswallet[0]->point;
+        $old_point_free = $rswallet[0]->point_free;
+    }
+    
+    $current_point = $point_type == '1' ? $old_point + $point : $old_point;
+    $current_point_free = $point_type == '2' ? $old_point_free + $point : $old_point_free;
+
+    // Check Duplicate of order_id
+    $rsbalancelog = $web->select("SELECT id FROM user_balancelog WHERE order_id = '{$order_id}';");
+    if (count($rsbalancelog) == 1) {
+        echo json_encode(['ret' => '105', 'message' => 'Order_id is duplicated!']);
+        $web->closedb();
+        exit;
+    }
+
+    // Insert log พร้อมค่า current_point
+    $insertBalanceLogSQL = "INSERT INTO `user_balancelog` 
+        (`user_id`, `order_id`, `type`, `{$pointColumn}`, `current_point`, `current_point_free`, `comment`, `action_by`) 
+        VALUES 
+        ('{$uid}', '{$order_id}', '1', '{$point}', '{$current_point}', '{$current_point_free}', '{$comment}', '{$action_by}');";
+    
+    $insertBalanceLog = $web->execute($insertBalanceLogSQL);
+    if (!$insertBalanceLog) {
+        echo json_encode(['ret' => '102', 'message' => 'Insert balancelog fail!']);
+        $web->closedb();
+        exit;
+    }
+
+
+    // Update wallet
+    $updateWalletSQL = "UPDATE `user_wallet` SET `{$pointColumn}` = `{$pointColumn}` + '{$point}' WHERE `user_id` = '{$uid}';";
+    $updateWallet = $web->execute($updateWalletSQL);
+    if (!$updateWallet) {
+        echo json_encode(['ret' => '104', 'message' => 'Update wallet fail!']);
+        $web->closedb();
+        exit;
+    }
+    
+    // Read updated value
+    $rsUpdated = $web->select("SELECT point, point_free FROM user_wallet WHERE user_id = '{$uid}';");
+    $now_point = $rsUpdated[0]->point;
+    $now_point_free = $rsUpdated[0]->point_free;
+    
+    
+
+    $data['point_before'] = ['point' => $old_point, 'point_free' => $old_point_free];
+    $data['point_after'] = ['point' => $now_point, 'point_free' => $now_point_free];
+
+    echo json_encode([
+        'ret' => '200',
+        'message' => 'Point updated successfully',
+        'data' => $data
+    ]);
+
+    $web->closedb();
+}
+// addPoint();
+// $res = addPoint(1, 'add_000001', 100, '1', '', '');
+
+//function deducePoint()
+function deductPoint($uid, $order_id, $point, $point_type, $comment, $action_by) {
+
+    // if (!isset($_POST['id']) || $_POST['id'] == '') {
+    //     echo json_encode(['ret' => '106', 'message' => 'invalid value id']);
+    //     exit;
+    // } else {
+    //     $uid = $_POST['id'];
+    //     if (!preg_match('/^[0-9]+$/', $uid)) {
+    //         echo json_encode(['ret' => '110', 'message' => "Only number is allowed!"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['order_id']) || $_POST['order_id'] == '') {
+    //     echo json_encode(['ret' => '107', 'message' => 'invalid value order_id']);
+    //     exit;
+    // } else {
+    //     $order_id = $_POST['order_id'];
+    //     if (!preg_match("/^[a-zA-Z\d]{6,20}$/", $order_id)) {
+    //         echo json_encode(['ret' => '111', 'message' => "invalid order_id format"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['point']) || $_POST['point'] == '') {
+    //     echo json_encode(['ret' => '108', 'message' => 'invalid value point']);
+    //     exit;
+    // } else {
+    //     $point = intval($_POST['point']);
+    //     if ($point <= 0) {
+    //         echo json_encode(['ret' => '112', 'message' => "invalid point format"]);
+    //         exit;
+    //     }
+    // }
+
+    // if (!isset($_POST['point_type']) || $_POST['point_type'] == '') {
+    //     echo json_encode(['ret' => '109', 'message' => 'invalid value point_type']);
+    //     exit;
+    // } else {
+    //     $point_type = $_POST['point_type'];
+    //     if (!in_array($point_type, ['1', '2'])) {
+    //         echo json_encode(['ret' => '113', 'message' => "Point type allowed only 1(point) or 2(point_free)."]);
+    //         exit;
+    //     }
+    // }
+
+    // $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
+    // $action_by = isset($_POST['action_by']) ? $_POST['action_by'] : '';
+
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if (empty($web->Connect)) {
+        echo json_encode(['ret' => '999', 'message' => 'Cannot connect database']);
+        exit;
+    }
+
+    $web->dbname(WebDB);
+    $rs = $web->select("SELECT username, id FROM user_account WHERE id='{$uid}';");
+
+    if (count($rs) != 1) {
+        echo json_encode(['ret' => '101', 'message' => 'User not found!']);
+        $web->closedb();
+        exit;
+    }
+
+    $pointColumn = $point_type == '1' ? 'point' : 'point_free';
+    
+    // Check Duplicate of order_id
+    $rsbalancelog = $web->select("SELECT id FROM user_balancelog WHERE order_id = '{$order_id}';");
+    if (count($rsbalancelog) == 1) {
+        echo json_encode(['ret' => '105', 'message' => 'Order_id is duplicated!']);
+        $web->closedb();
+        exit;
+    }
+    
+    // ดึงคะแนนก่อนหัก
+    $rswallet = $web->select("SELECT point, point_free FROM user_wallet WHERE user_id = '{$uid}';");
+    $old_point = 0;
+    $old_point_free = 0;
+    
+    if (count($rswallet) != 1) {
+        echo json_encode(['ret' => '121', 'message' => 'Not enough point']);
+        $web->closedb();
+        exit;
+    } else {
+        // เช็คว่า point พอหรือไม่
+        $old_point = $rswallet[0]->point;
+        $old_point_free = $rswallet[0]->point_free;
+        $current = ($point_type == '1') ? $old_point : $old_point_free;
+        if ($point > $current) {
+            $point_type = '2';
+            $pointColumn = $point_type == '1' ? 'point' : 'point_free';
+            $current = ($point_type == '1') ? $old_point : $old_point_free;   
+            if($point > $current) {                
+                $point_type = '3';
+                $pointColumn = 'point, point_free';
+                $current = $old_point + $old_point_free;   
+                if($point > $current) {                
+                echo json_encode(['ret' => '121', 'message' => 'Not enough point']);
+                $web->closedb();
+                exit;
+                }
+            }      
+        }
+        
+    }
+    if (in_array($point_type, ['1', '2'])){
+        $current_point = $point_type == '1' ? $old_point - $point : $old_point;
+        $current_point_free = $point_type == '2' ? $old_point_free - $point : $old_point_free;
+        // Insert log พร้อมค่า current_point
+        $insertBalanceLogSQL = "INSERT INTO `user_balancelog` (`user_id`, `order_id`, `type`, `{$pointColumn}`, `current_point`, `current_point_free`, `comment`, `action_by`) VALUES ('{$uid}', '{$order_id}', '2', '{$point}', '{$current_point}', '{$current_point_free}', '{$comment}', '{$action_by}');";
+        $insertBalanceLog = $web->execute($insertBalanceLogSQL);
+        if (!$insertBalanceLog) {
+            echo json_encode(['ret' => '102', 'message' => 'Insert balancelog fail!']);
+            $web->closedb();
+            exit;
+        }
+    } else {
+        $used_point = $point-$old_point_free;
+        $used_point_free = $old_point_free;
+
+        $current_point = $current - $point;
+        $current_point_free = 0;
+
+    $insertBalanceLogSQL = "INSERT INTO `user_balancelog` (`user_id`, `order_id`, `type`, `point`, `point_free`, `current_point`, `current_point_free`, `comment`, `action_by`) VALUES ('{$uid}', '{$order_id}', '2', '{$used_point}', '{$used_point_free}', '{$current_point}', '{$current_point_free}', '{$comment}', '{$action_by}');";
+    $insertBalanceLog = $web->execute($insertBalanceLogSQL);
+    if (!$insertBalanceLog) {
+            echo json_encode(['ret' => '103', 'message' => 'Insert balancelog fail!']);
+            $web->closedb();
+            exit;
+        }
+    }
+    
+    
+    // หักคะแนน
+    $updateWalletSQL = "UPDATE `user_wallet` SET `point` = '{$current_point}', `point_free` = '{$current_point_free}'  WHERE `user_id` = '{$uid}';";
+    $updateWallet = $web->execute($updateWalletSQL);
+    if (!$updateWallet) {
+        echo json_encode(['ret' => '104', 'message' => 'Update wallet fail!']);
+        $web->closedb();
+        exit;
+    }
+    
+    // ค่าหลังหัก
+    $rsUpdated = $web->select("SELECT point, point_free FROM user_wallet WHERE user_id = '{$uid}';");
+    $now_point = $rsUpdated[0]->point;
+    $now_point_free = $rsUpdated[0]->point_free;
+
+    $data['point_before'] = ['point' => $old_point, 'point_free' => $old_point_free];
+    $data['point_after'] = ['point' => $now_point, 'point_free' => $now_point_free];
+
+    echo json_encode([
+        'ret' => '200',
+        'message' => 'Point deducted successfully',
+        'data' => $data
+    ]);
+
+    $web->closedb();
+}
+
+// deductPoint();
+// $res = deductPoint(1, 'deduct_000002', 100, '2', '', '');
+
+
+//function checkPoint()
+function checkPoint($uid) {
+    // if (!isset($_POST['id']) || $_POST['id'] == '') {
+    //     echo json_encode(['ret' => '106', 'message' => 'invalid value id']);
+    //     exit;
+    // } else {
+    //     $uid = $_POST['id'];
+    //     if (!preg_match('/^[0-9]+$/', $uid)) {
+    //         echo json_encode(['ret' => '110', 'message' => "Only number is allowed!"]);
+    //         exit;
+    //     }
+    // }
+
+    include_once('include/WebConfig.php');
+
+    $web = new MySQLClass();
+    $web->Connect2Web();
+    if (empty($web->Connect)) {
+        echo json_encode(['ret' => '999', 'message' => 'Cannot connect database']);
+        exit;
+    }
+
+    $web->dbname(WebDB);
+    $rs = $web->select("SELECT id, username FROM user_account WHERE id='{$uid}';");
+
+    if (count($rs) != 1) {
+        echo json_encode(['ret' => '101', 'message' => 'User not found!']);
+        $web->closedb();
+        exit;
+    } else {
+        $rsWallet = $web->select("SELECT * FROM user_wallet WHERE user_id='{$uid}';");
+        if (count($rsWallet) != 1) {
+            return ['point' => 0, 'point_free' => 0];
+        } else {
+            return [
+                'point' => $rsWallet[0]->point,
+                'point_free' => $rsWallet[0]->point_free
+            ];
+        }
+    }
+}
+// checkPoint();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <title>Register</title>
+    <style>
+        .container {
+            width: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="register_process.php" method="POST" id="send_data">
+        <div>
+            <div class="container mt-5 bg-light p-4 rounded shadow-lg border border-primary">
+                <h1>Registration Form</h1>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="fname">Firstname</label>
+                        <input name="fname" type="text" class="form-control" id="fname" value="" placeholder="Firstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lname">Lastname</label>
+                        <input name="lname" type="text" class="form-control" id="lname" placeholder="Lastname" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input name="username" type="text" class="form-control" id="username" placeholder="Username" required>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input name="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm password</label>
+                        <input name="confirm-password" type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <input name="phone" type="text" class="form-control" id="phone" placeholder="Enter your phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea name="address" class="form-control" id="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="ref_code">Reference No.</label>
+                    <input name="ref_code" type="password" class="form-control" id="ref_code" placeholder="******">
+                </div>
+                <div class="form-check">
+                    <input name="check" type="checkbox" class="form-check-input" id="check">
+                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <button type="button" class="btn btn-primary mt-2">Submit</button>
+                <div class="mt-2">
+                    <a href="./login.php">Click here to login page.</a>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Registration Success</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="./check-mark-button-joypixels.gif" alt="">
+                            </div>
+                            <div class="modal-footer">
+                                <a href="./login.php">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+                
+
+                
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+    <script>
+        $('.btn').click(() => {
+            $('#fname').removeClass('is-invalid');
+            $('#lname').removeClass('is-invalid');
+            $('#username').removeClass('is-invalid');
+            $('#password').removeClass('is-invalid');
+            $('#confirm-password').removeClass('is-invalid');
+            $('#email').removeClass('is-invalid');
+            $('#phone').removeClass('is-invalid');
+            $('#address').removeClass('is-invalid');
+            let fname = $('#fname').val();
+            let lname = $('#lname').val();
+            let username = $('#username').val();
+            let password = $('#password').val();
+            let confirmPass = $('#confirm-password').val();
+            let email = $('#email').val();
+            let phone = $('#phone').val();
+            let address = $('#address').val();
+            let ref_code = $('#ref_code').val();
+
+
+            if (fname !== '') {
+                $('#fname').addClass('is-valid');
+            } else {
+                $('#fname').addClass('is-invalid');
+                $('#fname').focus();
+                return false;
+            }
+            if (lname !== '') {
+                $('#lname').addClass('is-valid');
+            } else {
+                $('#lname').addClass('is-invalid');
+                $('#lname').focus();
+                return false;
+            }
+            if (username !== '') {
+                $('#username').addClass('is-valid');
+            } else {
+                $('#username').addClass('is-invalid');
+                $('#username').focus();
+                return false;
+            }
+            if (password !== '') {
+                $('#password').addClass('is-valid');
+            } else {
+                $('#password').addClass('is-invalid');
+                $('#password').focus();
+                return false;
+            }
+            if (confirmPass !== '' && confirmPass === password) {
+                $('#confirm-password').addClass('is-valid');
+            } else {
+                $('#confirm-password').addClass('is-invalid');
+                $('#confirm-password').focus();
+                return false;
+            }
+            if (email !== '') {
+                $('#email').addClass('is-valid');
+            } else {
+                $('#email').addClass('is-invalid');
+                $('#email').focus();
+                return false;
+            }
+            if (phone !== '') {
+                $('#phone').addClass('is-valid');
+            } else {
+                $('#phone').addClass('is-invalid');
+                $('#phone').focus();
+                return false;
+            }
+            if (address !== '') {
+                $('#address').addClass('is-valid');
+            } else {
+                $('#address').addClass('is-invalid');
+                $('#address').focus();
+                return false;
+            }
+            if (fname !== '' && lname !== '' && username !== '' && password !== '' && confirmPass !== '' && email !== '' && phone !== '' && address !== '') {
+                // $('#send_data').submit();
+                var dataString = 'fname=' + fname + "&lname=" + lname + "&username=" + username + '&password=' + password + '&confirm-password=' + confirmPass + '&email=' + email + '&phone=' + phone + '&address=' + address + '&ref_code=' + ref_code; //ค่าที่จะส่งไปพร้อมตัวแปร
+                $.ajax({
+                    type: "POST", //METHOD "GET","POST"
+                    url: "register_process.php", //File ที่ส่งค่าไปหา
+                    data: dataString,
+                    //cache: false,
+                    success: function(data) {
+                        let obj = JSON.parse(data);
+                        if (obj.ret === '200') {
+                            $('#exampleModal').modal('show');
+                        } 
+                        if (obj.ret !== '200') {
+                            alert(obj.message);
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+
+</body>
+
+</html>
+<?php
+session_start();
+include_once('include/WebConfig.php');
+
+if (!isset($_SESSION['uid'])) {
+    echo "Unauthorized";
+    exit;
+}
+
+$web = new MySQLClass();
+$web->Connect2Web();
+if (empty($web->Connect)) {
+    echo "Cannot connect database";
+    exit;
+}
+$web->dbname(WebDB);
+
+$uid = $_SESSION['uid'];
+
+$sql = "SELECT p.id,  p.spin_reward, p.create_time, bl.point, bl.point_free, bl.current_point, bl.current_point_free FROM play_log p LEFT JOIN user_balancelog bl ON bl.id = p.log_id WHERE p.user_id = '{$uid}' ORDER BY p.id DESC LIMIT 10;";
+
+$rs = $web->select($sql);
+
+$sqlCost = "SELECT * FROM user_balancelog WHERE user_id = '{$uid}' AND COMMENT = 'Spin Cost' ORDER BY id DESC LIMIT 10;";
+$rsCost = $web->select($sqlCost);
+
+if (count($rs) > 0) {
+    echo '
+    <h2 class="w-auto text-center text-white mt-5">History 10 Spins</h2>
+    <table class="compsoul-history-table">
+        <thead>
+            <tr>
+                <tr>
+                    <th rowspan="2">No.</th>
+                    <th rowspan="2">Point Reward</th>
+                    <th colspan="2">Point</th>
+                    <th colspan="2">Point Free</th>
+                    <th rowspan="2">Spin Time</th>
+                </tr>
+                <tr>
+                    <th>Before</th>
+                    <th>After</th>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+            </thead>
+            </tr>
+        </thead>
+        <tbody>';
+
+    foreach ($rs as $i => $row) {
+        $beforePoint = $row->current_point + $row->point;
+        $beforePointFree = $row->current_point_free + $row->point_free;
+        $created = date("d/m/Y H:i:s", strtotime($row->create_time));
+
+        echo "<tr>
+            <td>".($i+1)."</td>
+            <td>".number_format($row->spin_reward)."</td>
+            <td>".number_format($beforePoint)."</td>
+            <td>".number_format($row->current_point)."</td>
+            <td>".number_format($beforePointFree)."</td>
+            <td>".number_format($row->current_point_free)."</td>
+            <td>".$created."</td>
+        </tr>";
+    }
+
+    echo '</tbody></table>';
+} else {
+    echo "No history found in play_log.";
+}
+
+
+$web->closedb();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <title>Table</title>
+</head>
+<body>
+
+    <?php
+
+include_once('include/WebConfig.php');
+
+$web = new MySQLClass();
+$web->Connect2Web();
+if (empty($web->Connect)) {
+    echo "Cannot connect database";
+    exit;
+}
+
+$web->dbname(WebDB);
+
+$sql = "SELECT * FROM user_account ORDER BY update_time DESC";
+$rs = $web->select($sql);
+
+if (count($rs) > 0) {
+    echo '<h1>List User</h1>';
+    echo '<div class="d-flex justify-content-center">';
+    echo '<table class="w-auto table table-striped table-bordered border-dark">';
+    echo '<tr class="table-dark">';
+    echo "<th>NO.</th>";
+    echo "<th>Name</th>";
+    echo "<th>Lastname</th>";
+    echo "<th>Username</th>";
+    echo "<th>Email</th>";
+    echo "<th>Phone No.</th>";
+    echo "<th>Address</th>";
+    echo "<th>Reference NO.</th>";
+    echo "<th>Created Time</th>";
+    echo "<th>Updated Time</th>";
+    echo "<th>Status</th>";
+    echo "<th>Action</th>";
+    echo "</tr>";
+    
+    
+    for ($i = 0; $i < count($rs); $i++) {
+        $created = date("d/m/Y H:i:s", strtotime($rs[$i]->create_time));
+        $updated = date("d/m/Y H:i:s", strtotime($rs[$i]->update_time));
+        $checked = $rs[$i]->status == 1 ? 'checked' : '';
+        
+        echo "<td>" . $i+1 . "</td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='name' data-original='{$rs[$i]->name}' value='{$rs[$i]->name}' readonly></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='lastname' data-original='{$rs[$i]->lastname}' value='{$rs[$i]->lastname}' readonly></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='username' data-original='{$rs[$i]->username}' name='username' value='{$rs[$i]->username}' readonly disabled></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='email' data-original='{$rs[$i]->email}' name='email' value='{$rs[$i]->email}' readonly></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='phone' data-original='{$rs[$i]->phone}' name='phone' value='{$rs[$i]->phone}' readonly></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='address' data-original='{$rs[$i]->address}' name='address' value='{$rs[$i]->address}' readonly></td>";
+        echo "<td><input type='text' class='form-control-plaintext' data-id='{$rs[$i]->id}' data-field='ref_code' data-original='{$rs[$i]->ref_code}' name='ref_code' value='{$rs[$i]->ref_code}' readonly disabled></td>";
+        echo "<td>" . $created . "</td>";
+        echo "<td>" . $updated . "</td>";
+        echo "<td>";
+        echo '<div class="form-check form-switch">';
+        echo '<input class="form-check-input status-switch" type="checkbox" role="switch"';
+        echo 'data-id="' . $rs[$i]->id . '" ' . $checked . '>';
+        echo '</div>';
+        echo "</td>";
+        echo "<td>
+    <button class='btn btn-sm btn-primary edit-btn' data-id='{$rs[$i]->id}'>EDIT</button>
+    <button class='btn btn-sm btn-success save-btn d-none' data-id='{$rs[$i]->id}'>SAVE</button>
+    <button class='btn btn-sm btn-secondary cancel-btn d-none' data-id='{$rs[$i]->id}'>CANCEL</button>
+</td>";
+        echo "</tr>";
+        echo '</div>';
+ 
+    }
+
+} else {
+    echo "No data found.";
+}
+
+$web->closedb();
+?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('.status-switch').change(function () {
+        let userId = $(this).attr('data-id');
+        let status = $(this).is(':checked') ? 1 : 0;
+        // ส่งข้อมูลไปยัง PHP ผ่าน AJAX
+        $.ajax({
+            url: 'api_ajax_user_account.php', // ไฟล์ PHP ที่จะอัปเดตฐานข้อมูล
+            method: 'POST',
+            data: {
+                id: userId,
+                status: status
+            },
+            success: function (response) {
+            },
+            error: function () {
+                alert('Unsuccess');
+            }
+        });
+    });
+})
+$(document).ready(function () {
+    // กด EDIT
+    $(document).on('click', '.edit-btn', function () {
+        let id = $(this).data('id');
+        
+        // เปลี่ยน input ให้ editable
+        $(`input[data-id='${id}']`).each(function () {
+            if (!$(this).prop('disabled')) {
+                $(this).css('background-color', '');
+                $(this).removeAttr('readonly')
+                       .removeClass('form-control-plaintext')
+                       .addClass('form-control');
+            }
+        });
+
+        // แสดงปุ่ม SAVE / CANCEL ซ่อนปุ่ม EDIT
+        $(`.edit-btn[data-id='${id}']`).addClass('d-none');
+        $(`.save-btn[data-id='${id}']`).removeClass('d-none');
+        $(`.cancel-btn[data-id='${id}']`).removeClass('d-none');
+    });
+
+    // กด CANCEL
+    $(document).on('click', '.cancel-btn', function () {
+        let id = $(this).data('id');
+
+        // ย้อนกลับ input เป็น readonly
+        $(`input[data-id='${id}']`).each(function () {
+            if (!$(this).prop('disabled')) {
+                let original = $(this).data('original'); // ← ดึงค่าดั้งเดิม
+                $(this).val(original)                     // ← ย้อนค่า
+                $(this).prop('readonly', true)
+                       .removeClass('form-control')
+                       .addClass('form-control-plaintext');
+            }
+        });
+
+        // ซ่อนปุ่ม SAVE / CANCEL และแสดง EDIT
+        $(`.edit-btn[data-id='${id}']`).removeClass('d-none');
+        $(`.save-btn[data-id='${id}']`).addClass('d-none');
+        $(`.cancel-btn[data-id='${id}']`).addClass('d-none');
+    });
+
+    // กด SAVE
+    $(document).on('click', '.save-btn', function () {
+    let id = $(this).data('id');
+    let data = { id: id };
+
+    // เก็บค่าจาก input ที่เกี่ยวข้อง
+    $(`input[data-id='${id}']`).each(function () {
+        let field = $(this).data('field');
+        if (field) {
+            let current = $(this).val();
+            data[field] = current;
+        }
+    });
+
+    // ส่ง AJAX ไปอัปเดต
+    $.ajax({
+        url: 'update_data.php',
+        method: 'POST',
+        data: data,
+        success: function (res) {
+            let obj;
+            try {
+                obj = JSON.parse(res);
+            } catch (e) {
+                alert('Invalid response from server');
+                return;
+            }
+
+            if (obj.ret === '101') {
+                const updated = obj.update_data[0] || {};
+
+                // วน loop input ที่มี data-id นี้
+                $(`input[data-id='${id}']`).each(function () {
+                    let field = $(this).data('field');
+                    if (!field || $(this).prop('disabled')) return;
+
+                    // เปลี่ยนกลับเป็น readonly
+                    let original = $(this).data('original'); // ← ดึงค่าดั้งเดิม
+                    $(this).val(original)                     // ← ย้อนค่า
+                    $(this).prop('readonly', true)
+                           .removeClass('form-control')
+                           .addClass('form-control-plaintext');
+
+                    // ถ้าฟิลด์นี้มีอยู่ใน response => แปลว่าถูกอัปเดต => ไฮไลท์
+                    if (updated.hasOwnProperty(field)) {
+                        $(this).css('background-color', 'orange');
+
+                        // อัปเดต value เผื่อฝั่ง server เปลี่ยนค่าจริง ๆ
+                        $(this).val(updated[field]);
+
+                        // อัปเดตค่า original
+                        $(this).data('original', updated[field]);
+
+                        // ลบไฮไลท์ภายหลัง
+                        setTimeout(() => {
+                            $(this).css('background-color', '');
+                        }, 5000);
+                    }
+                });
+
+                // toggle ปุ่ม
+                $(`.edit-btn[data-id='${id}']`).removeClass('d-none');
+                $(`.save-btn[data-id='${id}']`).addClass('d-none');
+                $(`.cancel-btn[data-id='${id}']`).addClass('d-none');
+
+            } else if (obj.ret === '201') {
+                alert('No update');
+            } else {
+                alert(obj.message || 'Update failed');
+            }
+        },
+        error: function () {
+            alert('AJAX error');
+        }
+    });
+});
+});
+</script>
+
+</body>
+</html>
+<?php
+    session_start();
+
+    if (isset($_SESSION['username'])) {
+        header("Location: roulette_wheel.php");
+        exit;
+    }
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <style>
+        .container {
+            width: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="login_process.php" method="POST" id="reg_form">
+        <div>
+            <div class="container bg-light p-4 rounded shadow-lg border border-primary mt-5">
+                <h1>Log In</h1>
+                <div class="p-2 ps-0 form-group">
+                    <label for="username">Username</label>
+                    <input name="username" type="text" class="form-control" id="username" placeholder="Username" required>
+                </div>
+                <div class="p-2 ps-0 form-group">
+                    <label for="password">Password</label>
+                    <input name="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                </div>
+                <button type="button" class="mt-2 btn btn-primary" id="login-btn">Login</button>
+                <a href="./registerform.php">
+                    <button type="button" class="mt-2 btn btn-secondary" id="sign-up-btn">Sign up</button>
+                </a>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#login-btn').click(() => {
+
+                $('#username').removeClass('is-invalid');
+                $('#password').removeClass('is-invalid');
+                let username = $('#username').val();
+                let password = $('#password').val();
+                if (username !== '') {
+                    $('#username').addClass('is-valid');
+                } else {
+                    $('#username').addClass('is-invalid');
+                    $('#username').focus();
+                    return false;
+                }
+                if (password !== '') {
+                    $('#password').addClass('is-valid');
+                } else {
+                    $('#password').addClass('is-invalid');
+                    $('#password').focus();
+                    return false;
+                }
+                $.ajax({
+                    type: "POST", //METHOD "GET","POST"
+                    url: "login_process.php", //File ที่ส่งค่าไปหา
+                    data: {
+                        username: username,
+                        password: password
+                    },
+                    //cache: false,
+                    success: function(data) {
+                        let obj = JSON.parse(data);
+                        if (obj.ret !== '200') {
+                            alert(obj.message);
+                        } else {
+                            window.location.href = "roulette_wheel.php";
+                            location.reload();
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+    
+
+</body>
+
+</html>
